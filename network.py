@@ -28,6 +28,7 @@ import numpy as np
 
 class NeuralNetwork:
     def __init__(self, n_neurons_input_layer, n_neurons_hidden_layer, n_neurons_output_layer):
+        # Gerar um conjunto de pesos entre cada camada da rede neural, cada peso terá um valor aleatório entre 0 e 1
         self.input_hidden_weights = np.random.rand(n_neurons_input_layer, n_neurons_hidden_layer)
         self.hidden_output_weights = np.random.rand(n_neurons_hidden_layer, n_neurons_output_layer)
 
@@ -46,17 +47,24 @@ class NeuralNetwork:
 
     def train(self, training_inputs, training_outputs, epochs):
         for epoch in range(epochs):
+            # Calcular a saída de cada neurônio em cada camada da rede neural sequencialmente utilizando o conjunto de treinamento
             output_from_hidden_layer, output_from_output_layer = self.think(training_inputs)
 
+            # Calcular os erros da camada de saída
             output_layer_error = training_outputs - output_from_output_layer
+            # Calcular o delta da camada de saída
             output_layer_delta = output_layer_error * self.sigmoid_derivative(output_from_output_layer)
 
+            # Calcular os erros da camada oculta
             hidden_layer_error = output_layer_delta.dot(self.hidden_output_weights.T)
+            # Calcular o delta da camada oculta
             hidden_layer_delta = hidden_layer_error * self.sigmoid_derivative(output_from_hidden_layer)
 
+            # Ajustar os pesos
             self.input_hidden_weights += training_inputs.T.dot(hidden_layer_delta)
             self.hidden_output_weights += output_from_hidden_layer.T.dot(output_layer_delta)
 
+# Definir conjuntos de treinamento (10 conjuntos, cada um com 4 valores de entrada e 1 valor de saída)
 training_inputs = np.array([
     [0.135, 0.341, 0.05, 0.885],
     [0.145, 0.33, 0.02, 0.592],
@@ -83,15 +91,20 @@ training_outputs = np.array([
     [0]
 ])
 
+# Criar uma rede neural com:
+# 4 neurônios na camada de entrada
+# 4 neurônios na camada de oculta
+# 1 neurônio na camada de saída
 neural_network = NeuralNetwork(4, 4, 1)
 
-print(f'Pesos entre a camada input e hidden antes do treino:\n{neural_network.input_hidden_weights}\n')
-print(f'Pesos entre a camada hidden e output antes do treino:\n{neural_network.hidden_output_weights}\n')
+# print(f'Pesos entre a camada input e hidden antes do treino:\n{neural_network.input_hidden_weights}\n')
+# print(f'Pesos entre a camada hidden e output antes do treino:\n{neural_network.hidden_output_weights}\n')
 
+# Treinar a rede neural por 60,000 épocas
 neural_network.train(training_inputs, training_outputs, 60000)
 
-print(f'Pesos entre a camada input e hidden depois do treino:\n{neural_network.input_hidden_weights}\n')
-print(f'Pesos entre a camada hidden e output depois do treino:\n{neural_network.hidden_output_weights}\n')
+# print(f'Pesos entre a camada input e hidden depois do treino:\n{neural_network.input_hidden_weights}\n')
+# print(f'Pesos entre a camada hidden e output depois do treino:\n{neural_network.hidden_output_weights}\n')
 
 print('Teste 1: Vinho seco = 13%; 3.45; 1.75g/l; 5.1g/l')
 print(f'Resultado: {neural_network.think(np.array([0.13, 0.345, 0.0175, 0.051]))[1]}')
