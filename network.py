@@ -1,3 +1,29 @@
+'''
+Classificação de vinho com rede neural
+
+Autores: Ademir J. Ferreira Júnior (@Azganoth), José C. Pereira (@JPereira1330)
+
+Amostras (Alcool, Ph, Açucar, Acidez)
+Amostra 01 (SECO): 13.5%; 3.41; 5g/l; 8.85g/l.
+Amostra 02 (SECO): 14.5%; 3.3; 2g/l; 5.92g/l.
+Amostra 03 (DOCE): 11.5%; 3.63; 50g/l; 5.32g/l.
+Amostra 04 (DOCE): 10%; 3.1; 50.7g/l; 6.45g/l.
+Amostra 05 (DOCE): 10%; 3.1; 42,2g/l; 7.12g/l.
+Amostra 06 (DOCE): 8.5%; 3.21; 42g/l; 8.9g/l.
+Amostra 07 (DOCE): 8.5%; 3.31; 42g/l; 5.85g/l.
+Amostra 08 (SECO): 14%; 3.68; 3.3g/l; 5.5g/l.
+Amostra 09 (SECO): 14%; 3.32; 3.6g/l; 6.1g/l.
+Amostra 10 (SECO): 14%; 3.51; 3.2g/l; 5.98g/l.
+
+Amostra de Teste 01 (SECO): 13%; 3.45; 1.75g/l; 5.1g/l.
+Amostra de Teste 02 (DOCE): 8.5%; 3.31; 42g/l; 5.85g/l.
+
+O resultado varia entre 0 e 1,
+sendo 0 o mais próximo de um vinho seco e 1 o mais próximo de um vinho doce.
+
+Dados: http://www.casavalduga.com.br/produtos/vinhos/
+Artigo: https://medium.com/technology-invention-and-more/how-to-build-a-simple-neural-network-in-9-lines-of-python-code-cc8f23647ca1
+'''
 import numpy as np
 
 class NeuralNetwork:
@@ -32,16 +58,16 @@ class NeuralNetwork:
             self.hidden_output_weights += output_from_hidden_layer.T.dot(output_layer_delta)
 
 training_inputs = np.array([
-    [0.135, 0.0341, 0.050, 0.885],
-    [0.145, 0.0330, 0.020, 0.592],
-    [0.115, 0.0363, 0.500, 0.532],
-    [0.100, 0.0310, 0.507, 0.645],
-    [0.100, 0.0310, 0.422, 0.712],
-    [0.085, 0.0321, 0.420, 0.890],
-    [0.085, 0.0331, 0.420, 0.585],
-    [0.140, 0.0368, 0.033, 0.550],
-    [0.140, 0.0332, 0.036, 0.610],
-    [0.140, 0.0351, 0.032, 0.598]
+    [0.135, 0.341, 0.05, 0.885],
+    [0.145, 0.33, 0.02, 0.592],
+    [0.115, 0.363, 0.5, 0.532],
+    [0.1, 0.31, 0.507, 0.645],
+    [0.1, 0.31, 0.422, 0.712],
+    [0.085, 0.321, 0.42, 0.89],
+    [0.085, 0.331, 0.42, 0.585],
+    [0.14, 0.368, 0.033, 0.55],
+    [0.14, 0.332, 0.036, 0.61],
+    [0.14, 0.351, 0.032, 0.598]
 ])
 
 training_outputs = np.array([
@@ -67,6 +93,10 @@ neural_network.train(training_inputs, training_outputs, 60000)
 print(f'Pesos entre a camada input e hidden depois do treino:\n{neural_network.input_hidden_weights}\n')
 print(f'Pesos entre a camada hidden e output depois do treino:\n{neural_network.hidden_output_weights}\n')
 
-test_input_index = 0
-print(f'Resultado: {neural_network.think(training_inputs[test_input_index])}.')
-print(f'Esperado: {training_outputs[test_input_index]}.')
+print('Teste 1: Vinho seco = 13%; 3.45; 1.75g/l; 5.1g/l')
+print(f'Resultado: {neural_network.think(np.array([0.13, 0.345, 0.0175, 0.051]))[1]}')
+print(f'Esperado: {[0]}')
+
+print('\nTeste 2: Vinho doce = 8.5%; 3.31; 42g/l; 5.85g/l')
+print(f'Resultado: {neural_network.think(np.array([0.085, 0.331, 0.42, 0.0585]))[1]}')
+print(f'Esperado: {[1]}')
